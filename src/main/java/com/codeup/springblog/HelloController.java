@@ -1,5 +1,6 @@
 package com.codeup.springblog;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,4 +23,10 @@ public class HelloController {
   public String addOne(@PathVariable int number) {
     return String.format("%d plus 1 is %d", number, number + 1);
   }
+
+  @GetMapping("/home")
+    public String welcome() {
+        return "home";
+    }
+
 }
