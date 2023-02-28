@@ -1,33 +1,37 @@
 package com.codeup.codeupspringblog.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class HelloController {
 
-  // Returns "Hello World"
   @GetMapping("/hello")
-  public String hello() {
-    return "Hello World";
+  public String hello(Model model) {
+    model.addAttribute("name", "World");
+    return "hello";
   }
 
-  // Returns "Hello {name}!"
   @GetMapping("/hello/{name}")
-  public String sayHello(@PathVariable String name) {
-    return "Hello " + name + "!";
+  public String sayHello(@PathVariable String name, Model model) {
+    model.addAttribute("name", name);
+    return "hello";
   }
 
-  // Adds one to the given number and returns the result
-  @GetMapping("/increment/{number}")
+  @RequestMapping(path = "/increment/{number}", method = RequestMethod.GET)
+  @ResponseBody
   public String addOne(@PathVariable int number) {
-    return String.format("%d plus 1 is %d", number, number + 1);
+    return String.format("%d plus 1 is %d!", number, number + 1);
   }
 
-  @GetMapping("/home")
-    public String welcome() {
-        return "home";
-    }
+  @GetMapping("/exponent/{num}/{power}")
+
+  public String exponent(@PathVariable int num, @PathVariable int power, Model model) {
+    model.addAttribute("num", num);
+    model.addAttribute("power", power);
+    model.addAttribute("num2", (int) Math.pow(num, power));
+    return "exponent";
+  }
 
 }

@@ -5,28 +5,27 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MathController {
-
-  @GetMapping("/add/{num1}/and/{num2}")
+  @GetMapping("/add/{num}/and/{num2}")
   @ResponseBody
-  public String add(@PathVariable int num1, @PathVariable int num2) {
-    return String.format("%d plus %d is %d", num1, num2, num1 + num2);
+  public String add(@PathVariable int num, @PathVariable int num2) {
+    return String.format("%d plus %d = %d", num, num2, num + num2);
   }
 
-  @GetMapping("/subtract/{num1}/from/{num2}")
+  @GetMapping("/subtract/{num}/and/{num2}")
   @ResponseBody
-  public String subtract(@PathVariable int num1, @PathVariable int num2) {
-    return String.format("%d minus %d is %d", num2, num1, num2 - num1);
+  public String subtract(@PathVariable int num, @PathVariable int num2) {
+    return String.format("%d minus %d = %d", num, num2, num - num2);
   }
 
-  @GetMapping("/multiply/{num1}/and/{num2}")
+  @GetMapping("/multiply/{num}/and/{num2}")
   @ResponseBody
-  public String multiply(@PathVariable int num1, @PathVariable int num2) {
-    return String.format("%d times %d is %d", num1, num2, num1 * num2);
+  public String multiply(@PathVariable int num, @PathVariable int num2) {
+    return String.format("%d times %d = %d", num, num2, num * num2);
   }
 
-  @GetMapping("/divide/{num1}/by/{num2}")
+  @GetMapping("/divide/{num}/and/{num2}")
   @ResponseBody
-  public String divide(@PathVariable int num1, @PathVariable int num2) {
-    return String.format("%d divided by %d is %d", num1, num2, num1 / num2);
+  public String divide(@PathVariable int num, @PathVariable int num2) {
+    return String.format("%d divided by %d = %d", num, num2, num / num2);
   }
 }
