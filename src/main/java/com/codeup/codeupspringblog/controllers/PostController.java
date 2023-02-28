@@ -80,7 +80,7 @@ public class PostController {
     return "redirect:/posts";
   }
 
-  @GetMapping("/{id}/edit")
+  @GetMapping("/{id}/editPost")
   public String editPost(@PathVariable Long id, Model model) {
     Post post = postDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
     model.addAttribute("post", post);
