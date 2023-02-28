@@ -1,59 +1,90 @@
 package com.codeup.codeupspringblog.controllers;
 
-import com.codeup.codeupspringblog.dao.*;
-import com.codeup.codeupspringblog.models.*;
+import com.codeup.codeupspringblog.dao.PostRepository;
+import com.codeup.codeupspringblog.models.Post;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/posts")
 public class PostController {
 
-  private final UserRepository userDao;
   private final PostRepository postDao;
 
-  public PostController(UserRepository userDao, PostRepository postDao) {
-    this.userDao = userDao;
+  public PostController(PostRepository postDao) {
     this.postDao = postDao;
   }
 
-  @GetMapping("/posts")
-  public String postsHome(Model model) {
+  @GetMapping
+  public String index(Model model) {
     model.addAttribute("posts", postDao.findAll());
     return "posts/index";
   }
 
-  @GetMapping("/posts/search")
-  public String showAllPosts(@RequestParam String query, Model model) {
+  @GetMapping("/search")
+  public String search(@RequestParam String query, Model model) {
     model.addAttribute("posts", postDao.searchByTitleLike(query));
     return "posts/index";
   }
 
-  @GetMapping("/posts/{id}")
-  public String postsHome(@PathVariable long id, Model model) {
-    model.addAttribute("post", postDao.findPostById(id));
-    model.addAttribute("userIsCreator", true);
+  @GetMapping("/{id}")
+  public String show(@PathVariable long id, Model model) {
+    Post post = postDao.findById(id).orElse(null);
+    if (post == null) {
+      return "redirect:/posts";
+    }
+    model.addAttribute("post", post);
     return "posts/show";
   }
 
-  @GetMapping("/posts/create")
-  public String postsForm(Model model) {
+  @GetMapping("/create")
+  public String create(Model model) {
     model.addAttribute("post", new Post());
     return "posts/create";
   }
 
-  @PostMapping("/posts/save")
-  public String savePost(@ModelAttribute Post post) {
-    User user = userDao.findUserById(1);
-    post.setUser(user);
+  @PostMapping("/create")
+  public String save(@Validated @ModelAttribute("post") Post post, BindingResult result) {
+    if (result.hasErrors()) {
+      return "posts/create";
+    }
     postDao.save(post);
+    return "redirect:/posts/" + post.getId();
+  }
+
+  @GetMapping("/{id}/edit")
+  public String edit(@PathVariable long id, Model model) {
+    Post post = postDao.findById(id).orElse(null);
+    if (post == null) {
+      return "redirect:/posts";
+    }
+    model.addAttribute("post", post);
+    return "posts/edit";
+  }
+
+  @PostMapping("/{id}/edit")
+  public String update(@Validated @ModelAttribute("post") Post post, BindingResult result) {
+    if (result.hasErrors()) {
+      return "posts/edit";
+    }
+    postDao.save(post);
+    return "redirect:/posts/" + post.getId();
+  }
+
+  @PostMapping("/{id}/delete")
+  public String delete(@PathVariable long id) {
+    postDao.deleteById(id);
     return "redirect:/posts";
   }
 
-  @GetMapping("/posts/{id}/edit")
-  public String editPost(Model model, @PathVariable long id) {
-    model.addAttribute("post", postDao.findPostById(id));
-    return "posts/create";
+  @GetMapping("/{id}/edit")
+  public String editPost(@PathVariable Long id, Model model) {
+    Post post = postDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
+    model.addAttribute("post", post);
+    return "posts/edit";
   }
 
 }
