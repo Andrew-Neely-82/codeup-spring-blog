@@ -19,4 +19,5 @@ public class CountController {
     model.addAttribute("numbers", numbers);
     return "count";
   }
+
 }
