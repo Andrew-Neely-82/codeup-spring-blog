@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 @Controller
 public class CountController {
-
   @GetMapping("/count")
   public String countNumbers(Model model) {
     ArrayList<Integer> numbers = new ArrayList<>();
@@ -19,5 +18,4 @@ public class CountController {
     model.addAttribute("numbers", numbers);
     return "count";
   }
-
 }

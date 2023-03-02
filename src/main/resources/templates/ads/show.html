@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="partials :: head ('Viewing a Post')">
+<head th:replace="partials :: head ('Viewing an Ad')">
   <title>Prolonged Fart Noises</title>
 </head>
 <body class="main-bg main-container">
 <nav th:replace="partials :: navbar"></nav>
 <main class="container">
-  <div>
-    <h1 th:text="${post.title}"></h1>
-    <h3 th:text="|By: ${post.user.email}|"></h3>
-    <p th:text="${post.body}"></p>
+  <h1 th:text="${ad.title}"></h1>
+  <h2>By: <span th:text="${ad.user.email}"></span></h2>
+  <p th:text="${ad.description}"></p>
+  <div th:each="category : ${ad.categories}">
+    <h6 th:text="${category.name}"></h6>
   </div>
 </main>
 <footer th:replace="partials :: footer"></footer>

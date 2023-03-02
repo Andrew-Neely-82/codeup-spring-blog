@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{partials :: head ('Create New Post')}">
+<head th:replace="~{partials :: head ('Create New Ad')}">
 </head>
 <body class="main-container main-bg">
 <nav th:replace="partials :: navbar"></nav>
 <main class="container">
-  <h1 th:text="${heading}"></h1>
-  <form th:action="@{/posts/save}" th:method="post" th:object="${post}">
+  <form th:action="@{/ads/save}" th:method="post" th:object="${ad}">
     <label for="title">Post Title:</label>
-    <input type="text" name="title" id="title" th:field="*{title}">
-    <label for="body">Post Body:</label><br>
-    <textarea name="body" id="body" cols="30" rows="10" th:field="*{body}"></textarea>
+    <input type="text" name="title" id="title" th:field="*{title}"><br>
+    <label for="description">Post Body:</label><br>
+    <textarea name="description" id="description" th:field="*{description}" cols="30" rows="10"></textarea>
     <input type="hidden" th:field="*{id}">
-    <button class="btn footer-bg" type="submit">Submit Post</button>
+    <button class="btn footer-bg" type="submit">Submit Ad</button>
   </form>
 </main>
 <footer th:replace="partials :: footer"></footer>

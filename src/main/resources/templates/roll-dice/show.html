@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="partials :: head ('Viewing a Post')">
-  <title>Prolonged Fart Noises</title>
+<head th:replace="partials :: head ('Roll-a-Die')">
 </head>
-<body class="main-bg main-container">
+<body class="main-container main-bg">
 <nav th:replace="partials :: navbar"></nav>
 <main class="container">
-  <div>
-    <h1 th:text="${post.title}"></h1>
-    <h3 th:text="|By: ${post.user.email}|"></h3>
-    <p th:text="${post.body}"></p>
-  </div>
+  <h1>User guessed <span th:text="${number}"></span>. The die landed on <span th:text="${result}"></span>.</h1>
+  <h1 th:if="${number != result}">You lose...</h1>
+  <h1 th:if="${number == result}">You win!!!</h1>
 </main>
 <footer th:replace="partials :: footer"></footer>
 <div th:replace="partials :: boot-scripts"></div>

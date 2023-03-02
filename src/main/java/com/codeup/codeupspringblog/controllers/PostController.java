@@ -1,90 +1,60 @@
 package com.codeup.codeupspringblog.controllers;
 
-import com.codeup.codeupspringblog.dao.PostRepository;
-import com.codeup.codeupspringblog.models.Post;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import com.codeup.codeupspringblog.models.*;
+import com.codeup.codeupspringblog.repositories.*;
+import com.codeup.codeupspringblog.services.*;
+import org.springframework.stereotype.*;
+import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/posts")
 public class PostController {
-
   private final PostRepository postDao;
+  private final UserRepository userDao;
+  private final EmailService emailService;
 
-  public PostController(PostRepository postDao) {
+  public PostController(PostRepository postDao, UserRepository userDao, EmailService emailService) {
     this.postDao = postDao;
+    this.userDao = userDao;
+    this.emailService = emailService;
   }
 
-  @GetMapping
-  public String index(Model model) {
-    model.addAttribute("posts", postDao.findAll());
+  @GetMapping("/posts")
+  public String postsHome(Model model) {
+    List<Post> posts = postDao.findAll();
+    model.addAttribute("posts", posts);
     return "posts/index";
   }
 
-  @GetMapping("/search")
-  public String search(@RequestParam String query, Model model) {
-    model.addAttribute("posts", postDao.searchByTitleLike(query));
-    return "posts/index";
-  }
-
-  @GetMapping("/{id}")
-  public String show(@PathVariable long id, Model model) {
-    Post post = postDao.findById(id).orElse(null);
-    if (post == null) {
-      return "redirect:/posts";
-    }
+  @GetMapping("/posts/{id}")
+  public String postsHome(@PathVariable long id, Model model) {
+    Post post = postDao.findPostById(id);
     model.addAttribute("post", post);
     return "posts/show";
   }
 
-  @GetMapping("/create")
-  public String create(Model model) {
+  @GetMapping("/posts/create")
+  public String postsForm(Model model) {
     model.addAttribute("post", new Post());
+    model.addAttribute("heading", "Create new post.");
     return "posts/create";
   }
 
-  @PostMapping("/create")
-  public String save(@Validated @ModelAttribute("post") Post post, BindingResult result) {
-    if (result.hasErrors()) {
-      return "posts/create";
-    }
+  @PostMapping("/posts/save")
+  public String createPost(@ModelAttribute Post post) {
+    User user = userDao.findById(1);
+    post.setUser(user);
     postDao.save(post);
-    return "redirect:/posts/" + post.getId();
-  }
-
-  @GetMapping("/{id}/edit")
-  public String edit(@PathVariable long id, Model model) {
-    Post post = postDao.findById(id).orElse(null);
-    if (post == null) {
-      return "redirect:/posts";
-    }
-    model.addAttribute("post", post);
-    return "posts/edit";
-  }
-
-  @PostMapping("/{id}/edit")
-  public String update(@Validated @ModelAttribute("post") Post post, BindingResult result) {
-    if (result.hasErrors()) {
-      return "posts/edit";
-    }
-    postDao.save(post);
-    return "redirect:/posts/" + post.getId();
-  }
-
-  @PostMapping("/{id}/delete")
-  public String delete(@PathVariable long id) {
-    postDao.deleteById(id);
+    emailService.preparedAndSendPost(post);
     return "redirect:/posts";
   }
 
-  @GetMapping("/{id}/editPost")
-  public String editPost(@PathVariable Long id, Model model) {
-    Post post = postDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post ID"));
-    model.addAttribute("post", post);
-    return "posts/edit";
+  @GetMapping("/posts/{id}/edit")
+  public String editPostForm(Model model, @PathVariable long id) {
+    model.addAttribute("post", postDao.findPostById(id));
+    model.addAttribute("heading", "Edit post.");
+    return "posts/create";
   }
-
 }

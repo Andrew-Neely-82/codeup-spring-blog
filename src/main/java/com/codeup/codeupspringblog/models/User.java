@@ -5,20 +5,23 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(nullable = false, length = 25)
+  @Column
   private String username;
 
-  @Column(nullable = false, length = 100)
+  @Column
   private String email;
 
-  @Column(nullable = false)
+  @Column
   private String password;
+
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+  private List<Ad> ads;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
   private List<Post> posts;
@@ -26,25 +29,33 @@ public class User {
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(User copy) {
+    id = copy.id; // This line is SUPER important! Many things won't work if it's absent
+    email = copy.email;
+    username = copy.username;
+    password = copy.password;
+  }
+
+  public User(long id, String name) {
+    this.id = id;
+    this.username = name;
+  }
+
+  public User(long id, String username, String email, String password, List<Ad> ads, List<Post> posts) {
+    this.id = id;
     this.username = username;
     this.email = email;
     this.password = password;
+    this.ads = ads;
+    this.posts = posts;
   }
 
-  public User(long user_id, String username, String email, String password) {
-    this.id = user_id;
-    this.username = username;
-    this.email = email;
-    this.password = password;
-  }
-
-  public long getUser_id() {
+  public long getId() {
     return id;
   }
 
-  public void setUser_id(long user_id) {
-    this.id = user_id;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public String getUsername() {
@@ -69,5 +80,21 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public List<Ad> getAds() {
+    return ads;
+  }
+
+  public void setAds(List<Ad> ads) {
+    this.ads = ads;
+  }
+
+  public List<Post> getPosts() {
+    return posts;
+  }
+
+  public void setPosts(List<Post> posts) {
+    this.posts = posts;
   }
 }

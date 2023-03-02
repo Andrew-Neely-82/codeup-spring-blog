@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="partials :: head ('Viewing a Post')">
-  <title>Prolonged Fart Noises</title>
+<head th:replace="partials :: head ('Welcome to Bloglandia!')">
 </head>
-<body class="main-bg main-container">
+<body class="main-container main-bg">
 <nav th:replace="partials :: navbar"></nav>
 <main class="container">
-  <div>
-    <h1 th:text="${post.title}"></h1>
-    <h3 th:text="|By: ${post.user.email}|"></h3>
-    <p th:text="${post.body}"></p>
-  </div>
+  <h1>Welcome to <span class="logo-font">Bloglandia</span></h1>
+  <h2>A land of blogs, dreams, and magic!</h2>
 </main>
 <footer th:replace="partials :: footer"></footer>
 <div th:replace="partials :: boot-scripts"></div>
